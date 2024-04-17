@@ -1,4 +1,16 @@
-<h1>Welcome to SvelteKit</h1>
-<p>
-    Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
-</p>
+<script>
+    const jutut = [
+        "Leipä",
+        "Tomaatti",
+        "Kurkku"
+    ];
+</script>
+
+<h1>Kauppalista</h1>
+
+<ul>
+    {#each jutut as juttu}
+    <li>{juttu}</li>
+    {/each}
+</ul>
+
