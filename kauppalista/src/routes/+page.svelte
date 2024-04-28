@@ -1,21 +1,20 @@
 <script>
     import {enhance} from '$app/forms'
+    import Kauppalista from '$/lib/components/Kauppalista.svelte';
 
     export let data;
     export let form;   
+
+    function poistaAsia() {
+        const params = e.detail;
+        console.log('Kutsuttiin poist-asiaa parametrilla', params);
+    }
 </script>
 
 <div class="komponentti">
     <h1>Kauppalista</h1>
-
-    <ul>
-        {#each data.asiat as asia}
-        <li>
-            <input type="checkbox" />
-            {asia}
-        </li>
-        {/each}  
-    </ul>
+    <Kauppalista asiat={data.asiat} on:poista-asia={poista-asia}/>
+   
     {#if form?.error}
     <p class="error">{form.error}</p>
     {/if}
@@ -43,15 +42,7 @@
         color: green;
         font-size: 200%;
     }
-    ul {
-        color: greenyellow;
-        font-size: 150%;
-        background-color: orangered;
-    }
-    li {
-        list-style-type: none;
-        
-    }
+   
     .uusi {
         background-color: orange;
         font-size: 150%;

@@ -1,30 +1,21 @@
 import {fail} from '@sveltejs/kit';
+import {lataaKauppalista, luoKauppalistanTuote} from '$lib/api';
 
-const asiat = [
-    "Leipä",
-    "Tomaatti",
-    "Kurkku",
-    "Juusto"
-];
+const LISTA_ID = 'azydx1vjxm5yw56';
 
-export function load() {
+export async function load() {
+    const asiat = await lataaKauppalista(LISTA_ID)
     return {asiat};
 }
 
 export const actions = {
     lisääAsia: async ({request}) => {
         const data = await request.formData();
-        const asia = data.get('asia')?.trim() ?? "";
-        if (!asia) {
-            return fail(422, {
-                error: "Tuote ei saa olla tyhjä"
-            });
+        const asia = data.get('tuote')?.trim() ?? '';      
+        try {
+        luoKauppalistanTuote(LISTA_ID, asia); 
+        } catch(error) {
+            return fail(422, {error: error.message});
         }
-        if (asiat.includes(asia)) {
-            return fail(422, {
-                error: "Asia oli jo listalla"
-            })
-        }
-        asiat.push(asia);        
-    }
-}
+    },
+};
