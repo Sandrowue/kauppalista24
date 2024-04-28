@@ -1,6 +1,6 @@
 <script>
     import {enhance} from '$app/forms'
-    import Kauppalista from '$/lib/components/Kauppalista.svelte';
+    import Kauppalista from '$lib/components/Kauppalista.svelte';
 
     export let data;
     export let form;   
