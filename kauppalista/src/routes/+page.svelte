@@ -13,7 +13,7 @@
 
 <div class="komponentti">
     <h1>Kauppalista</h1>
-    <Kauppalista asiat={data.asiat} on:poista-asia={poista-asia}/>
+    <Kauppalista asiat={data.asiat} on:poista-asia={poistaAsia}/>
    
     {#if form?.error}
     <p class="error">{form.error}</p>
