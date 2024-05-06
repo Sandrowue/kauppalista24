@@ -8,7 +8,7 @@ export async function lataaKauppalista(listaId) {
         filter: pb.filter('lista = {:listaId}', {listaId}),
         sort: 'nro',
     });
-    return response.items.map((x) => x.teksti);
+    return response.items.map((x) => x.tuote);
 }
 
 export async function luoKauppalistanTuote(listaId, teksti) {
@@ -29,5 +29,5 @@ export async function luoKauppalistanTuote(listaId, teksti) {
 }
 
 function getPocketBase() {
-    return new PocketBase('http://localhost:8090');
+    return new PocketBase('http://127.0.0.1:8090');
 }
