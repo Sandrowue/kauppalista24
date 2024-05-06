@@ -6,7 +6,7 @@
 
 <ul>
     {#each asiat as asia}
-        <Asia tektsti={asia} on:poista-asia />
+        <Asia teksti={asia} on:poista-asia />
    
     {/each}  
 </ul>
