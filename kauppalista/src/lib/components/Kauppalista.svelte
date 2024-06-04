@@ -5,8 +5,12 @@
 </script>
 
 <ul>
-    {#each asiat as asia}
-        <Asia teksti={asia} on:poista-asia />
+    {#each asiat as asia (asia.id)}
+        <Asia 
+            teksti={asia.teksti}
+            valmis={asia.vamis} 
+            on:poista-asia 
+            on:asia-valmis-muuttui/>
    
     {/each}  
 </ul>

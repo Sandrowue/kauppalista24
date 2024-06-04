@@ -1,20 +1,35 @@
 <script>
-    import {enhance} from '$app/forms'
+    import {enhance} from '$app/forms';
     import Kauppalista from '$lib/components/Kauppalista.svelte';
+    import {poistaKauppalistanTuote} from '$lib/api';
 
     export let data;
     export let form;   
 
-    function poistaAsia() {
-        const params = e.detail;
-        console.log('Kutsuttiin poist-asiaa parametrilla', params);
+    async function poistaAsia(e) {
+        const {teksti} = e.detail; // SAMA KUIN: const teksti = e.detail.teksti;
+        const {LISTA_ID} = data; // SAMA KUIN: LISTA_ID = data.LISTA_ID 
+        const poistoPromise = poistaKauppalistanTuote(LISTA_ID, teksti)
+        data.asiat = data.asiat.filter((x) => x !== teksti);
+        await poistoPromise;
     }
+    
+    async function käsitteleValmisMuutos(e) {
+        const {teksti, valmis} = e.detail;
+        console.log("Asia", teksti, "muuttui valmis-tilaan:", valmis);
+        const {LISTA_ID} = data;
+        await asetaKauppalistanAsianValmis(LISTA_ID, teksti, valmis);
+    }
+
 </script>
 
 <div class="komponentti">
     <h1>Kauppalista</h1>
-    <Kauppalista asiat={data.asiat} on:poista-asia={poistaAsia}/>
-   
+    <Kauppalista 
+    asiat={data.asiat} 
+    on:poista-asia={poistaAsia}
+    on:asia-valmis-muuttui={käsitteleValmisMuutos}
+    />
     {#if form?.error}
     <p class="error">{form.error}</p>
     {/if}
