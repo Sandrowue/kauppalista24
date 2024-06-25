@@ -1,10 +1,27 @@
 <script>
-    import {enhance} from '$app/forms';
     import Kauppalista from '$lib/components/Kauppalista.svelte';
-    import {poistaKauppalistanTuote} from '$lib/api';
+    import {
+            luoKauppalistanTuote,
+            poistaKauppalistanTuote, 
+            asetaKauppalistanAsianValmis,} from '$lib/api';
+    import Alert from '$lib/components/Ilmoitus.svelte';
 
     export let data;
-    export let form;   
+    let uusiAsiaTeksti = '';
+    let uusiAsiaVirhe = null;
+    
+    async function lisääAsia(e) {
+        const teksti = uusiAsiaTeksti.trim(); 
+        const asia = {id: String(Math.random()), teksti};    
+        uusiAsiaTeksti = '';
+        data.asiat = [...data.asiat, asia];
+        try {
+            await luoKauppalistanTuote(data.LISTA_ID, teksti); 
+            uusiAsiaVirhe = '';
+        } catch(error) {
+            uusiAsiaVirhe = error.message;
+        }
+    }
 
     async function poistaAsia(e) {
         const {teksti} = e.detail; // SAMA KUIN: const teksti = e.detail.teksti;
@@ -18,11 +35,12 @@
         const {teksti, valmis} = e.detail;
         console.log("Asia", teksti, "muuttui valmis-tilaan:", valmis);
         const {LISTA_ID} = data;
-        await asetaKauppalistanAsianValmis(LISTA_ID, teksti, valmis);
+        await asetaKauppalistanAsianValmis(data.LISTA_ID, teksti, valmis);
     }
 
 </script>
 
+<Alert/>
 <div class="komponentti">
     <h1>Kauppalista</h1>
     <Kauppalista 
@@ -30,17 +48,17 @@
     on:poista-asia={poistaAsia}
     on:asia-valmis-muuttui={käsitteleValmisMuutos}
     />
-    {#if form?.error}
-    <p class="error">{form.error}</p>
+    {#if uusiAsiaVirhe}
+    <p class="error">{uusiAsiaVirhe}</p>
     {/if}
-    <form class="uusi" method="POST" action="?/lisääAsia" use:enhance>
+    <form class="uusi" on:submit={lisääAsia}>
         <label for="uusi-asia">Lisää uusi tuote:</label>
         <!-- svelte-ignore a11y-autofocus -->
         <input 
             id="uusi-asia" 
             name="asia" 
             type="text" 
-            value={form?.asia ?? ''}
+            bind:value={uusiAsiaTeksti}
             required 
             autofocus/>
         <button>Lisää</button>
