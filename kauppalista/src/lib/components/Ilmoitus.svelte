@@ -1,17 +1,10 @@
 <script>
     import {alert} from '../stores.js';
-    import {onDestroy} from 'svelte';
-
-    let teksti = '';
-
-    const unsubscribe = alert.subscribe((value) => (teksti =value));
-
-    onDestroy(unsubscribe);
 </script>
 
-{#if teksti}
-    <button on:click={() => (teksti = '')}>
-        {teksti}
+{#if $alert}
+    <button on:click={() => ($alert = '')}>
+        {$alert}
     </button>
 {/if}
 
