@@ -1,24 +1,21 @@
 <script>
     import {createEventDispatcher} from "svelte";
 
-    export let teksti;
-    export let valmis;
+    export let asia;
+    
 
     const dispatch = createEventDispatcher();
 </script>
 
 <li>
     <input type="checkbox" 
-    checked={valmis}
-    on:change={() => {
-        valmis = !valmis;
-        dispatch('asia-valmis-muuttui', {teksti, valmis})
-    }}
+    checked={asia.valmis}
+    on:change={() => dispatch('asia-valmis-muuttui', asia)}
     />
-    <span class={valmis ? 'valmis' : ''}>
-    {teksti}
+    <span class={asia.valmis ? 'valmis' : ''}>
+    {asia.teksti}
     </span>
-    <button on:click={() => dispatch('poista-asia', {teksti})}>🗑️</button>
+    <button on:click={() => dispatch('poista-asia', asia)}>🗑️</button>
 </li>
 
 <style>
