@@ -16,9 +16,8 @@ export function paikallinenStore(avaimenNimi, alkuArvo) {
         subscribe: taustaStore.subscribe,
         update: taustaStore.update,
         set: (arvo) => {
-         console.log('Set kutsuttu arvolla:', arvo);
-         localStorage.setItem(avaimenNimi, JSON.stringify(arvo));
-         taustaStore.set(arvo);
+            localStorage.setItem(avaimenNimi, JSON.stringify(arvo));
+            taustaStore.set(arvo);
         },
     };
 }
