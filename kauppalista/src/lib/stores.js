@@ -1,10 +1,9 @@
 import {writable} from 'svelte/store';
 
-import { paikallinenStore } from './paikallinenStore';
+import {kauppalistaPbStore} from './kauppalistaPbStore';
 
 export const alert = writable('Tervetuloa kauppalistalle');
 
-export const kauppalista = paikallinenStore('kauppalista', [
-    {id: "a", teksti: "Paprika", valmis: false},
-    {id: 'b', teksti: "Omena", valmis: true}
-]);
+const LISTA_ID = 'azydx1vjxm5yw56';
+
+export const kauppalista = kauppalistaPbStore(LISTA_ID);

@@ -1,17 +1,20 @@
 <script>
-    import Kauppalista from '$lib/components/Kauppalista.svelte';
     import Alert from '$lib/components/Ilmoitus.svelte';
-    import { kauppalista } from '$lib/stores.js';
+    import Kauppalista from '$lib/components/Kauppalista.svelte';
+    import {kauppalista} from '$lib/stores.js';
     
     
    
 </script>
 
 <Alert/>
-<Kauppalista 
-    bind:asiat={$kauppalista} 
-/>
-
+{#if $kauppalista.tila == 'valmis'}
+    <Kauppalista bind:asiat={$kauppalista.iteemit} />
+{:else if $kauppalista.tila == 'lataa'}
+    <div>Ladataan...</div>
+{:else if $kauppalista.tila == 'virhe'}
+    <div>Virhe: {$kauppalista.virhe}</div>
+{/if}
 
 
 

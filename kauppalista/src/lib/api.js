@@ -11,28 +11,24 @@ export async function lataaKauppalista(listaId) {
     return response.items;
 }
 
-export async function luoKauppalistanTuote(listaId, teksti) {
-    if (!teksti) throw Error('Teksti ei saa olla tyhjä');
+export async function luoKauppalistanTuote(listaId, asia) {
+    if (!asia.teksti) throw Error('Teksti ei saa olla tyhjä');
     const pb = getPocketBase();
-    const tuotteet = await haeKauppalistanTuetteet(pb, listaId, teksti);
-    if (tuotteet) throw Error('Sama asia oli jo listalla');       
-    await pb.collection('kauppalistan_tuotteet').create({lista: listaId, /*tuote:*/ teksti});
+    const vanhaAsia = await haeKauppalistanTuetteet(pb, listaId, asia.teksti);
+    if (vanhaAsia) throw Error('Sama asia oli jo listalla');       
+    await pb
+        .collection('kauppalistan_tuotteet')
+        .create({...asia, lista: listaId});
 }
 
-export async function poistaKauppalistanTuote(listaId, teksti) {
+export async function poistaKauppalistanTuote(asia) {
     const pb = getPocketBase();    
-    const tuote = await haeKauppalistanTuetteet(pb, listaId, teksti);   
-    if (!tuote) return;
-    await pb.collection('kauppalistan_tuotteet').delete(tuote.id);
+    await pb.collection('kauppalistan_tuotteet').delete(asia.id);
 }
 
-export async function asetaKauppalistanAsianValmis(listaId, teksti, valmis) {
+export async function päivitäKauppalistanAsia(asia) {
     const pb = getPocketBase();
-    const asia = await haeKauppalistanTuetteet(pb, listaId, teksti);
-    if (!asia) return;
-    pb.collection('kauppalistan_tuotteet').update(
-        asia.id, {valmis}
-    )
+    await pb.collection('kauppalistan_tuotteet').update(asia.id, asia)
 }
 
 export async function haeKauppalistanTuetteet(pb, listaId, teksti) {

@@ -1,9 +1,36 @@
 <script>
+    import {onDestroy} from 'svelte';
+    import {fly} from 'svelte/transition';
+    // import {elasticOut} from 'svelte/easing';
+
     import {alert} from '../stores.js';
+
+    export let piilotusViiveMs = 4000;
+    let näkyvissä = false;
+    let ajastimenKahva = undefined;
+
+    function viestinTaiViiveenMuuttuessa(viesti, viiveMs) {
+        clearTimeout(ajastimenKahva);
+        if (!viesti) {
+            näkyvissä = false;
+        } else {
+            näkyvissä = true;
+            ajastimenKahva = setTimeout(() => (näkyvissä = false), viiveMs);
+        }
+    }
+    $: viestinTaiViiveenMuuttuessa($alert, piilotusViiveMs);
+
+    onDestroy(() => clearTimeout(ajastimenKahva));
 </script>
 
-{#if $alert}
-    <button on:click={() => ($alert = '')}>
+{#if näkyvissä}
+    <button on:click={() => ($alert = '')} transition:fly={{
+        delay: 250,
+        duration: 1300,
+        x: 0,
+        y: -100,
+        opacity: 0.5,
+        }}>
         {$alert}
     </button>
 {/if}
@@ -19,8 +46,9 @@
         display: flex;
         align-items: center;
         border-radius: 0.2rem;
-        background-color: #565656;
-        color: #fff;
+        border-color: yellowgreen;
+        background-color: green;
+        color: yellow;
         font-weight: 700;
         padding: 0.5rem 1.4rem;
         font-size: 1.5rem;
