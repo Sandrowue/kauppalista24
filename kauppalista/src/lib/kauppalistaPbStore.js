@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import { lataaKauppalista, luoKauppalistanTuote, poistaKauppalistanTuote, päivitäKauppalistanAsia } from "./api";
+import * as api from "./api";
 import { käsitteleMuutokset } from "./pbUtils";
 
 /*
@@ -27,18 +27,25 @@ export function kauppalistaPbStore(listaId) {
 
     let vanhatIteemit = undefined;
 
-    lataaKauppalista(listaId)
-        .then((kauppalistanAsiat) => {
+    async function lataaKauppalista() {
+        try {
+            const kauppalistanAsiat = await api.lataaKauppalista(listaId);
             vanhatIteemit = kauppalistanAsiat;
             taustaStore.set({tila: 'valmis', iteemit: kauppalistanAsiat});
-    })
-    .catch((error) => {
-        console.error('Virhe:', error);
-        taustaStore.set({
-            tila: 'virhe',
-            virhe: 'Kauppalistaa ei saa ladattua'
-        });
-    });
+        } catch(error) {
+            console.error('Virhe:', error);
+            taustaStore.set({
+                tila: 'virhe',
+                virhe: 'Kauppalistaa ei saa ladattua'
+            });
+            return;
+            
+        }
+       
+        
+    }
+
+    lataaKauppalista();
 
     return {
         ...taustaStore,
@@ -48,9 +55,9 @@ export function kauppalistaPbStore(listaId) {
             console.log('vanhat iteemit:', vanhatIteemit);
             console.log('uudet iteemit:', arvo.iteemit);
             käsitteleMuutokset(vanhatIteemit, arvo.iteemit, {
-                luoUusi: (iteemi) => luoKauppalistanTuote(listaId, iteemi),
-                päivitä: päivitäKauppalistanAsia,
-                poista: poistaKauppalistanTuote,
+                luoUusi: (iteemi) => api.luoKauppalistanTuote(listaId, iteemi),
+                päivitä: api.päivitäKauppalistanAsia,
+                poista: api.poistaKauppalistanTuote,
             })
             vanhatIteemit = arvo.iteemit;
             

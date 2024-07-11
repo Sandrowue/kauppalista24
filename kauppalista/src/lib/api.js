@@ -43,6 +43,16 @@ export async function haeKauppalistanTuetteet(pb, listaId, teksti) {
     return (response.items.length) ? response.items[0] : null;
 }
 
+export async function kuunteleMuutoksia(listaId, callback) {
+    const pb = getPocketBase();
+    const asiat = pb.collection('kauppalistan_tuotteet');
+    await asiat.subscribe('*', (data) => {
+        if (data.record.lista === listaId) {
+            callback(data);          
+        }
+    });
+}
+
 function getPocketBase() {
     return new PocketBase('http://127.0.0.1:8090');
     // return new PocketBase('http://localhost:8090');
