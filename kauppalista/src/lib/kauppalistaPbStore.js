@@ -39,10 +39,35 @@ export function kauppalistaPbStore(listaId) {
                 virhe: 'Kauppalistaa ei saa ladattua'
             });
             return;
-            
+           
         }
-       
-        
+        api.kuunteleMuutoksia(listaId, ({action, record}) => {
+            if (action === 'create') {
+                if (!vanhatIteemit.some((x) => x.id === record.id)) {
+                    // Ei ollut sellaista iteemiä jonka id on record.id, joten record ei ollut vielä listassa.
+                    vanhatIteemit.push(record);
+                    taustaStore.set({tila: 'valmis', iteemit: vanhatIteemit});
+                }
+            } else if (action === 'update') {
+                const idx = vanhatIteemit.findIndex((x) => x.id === record.id);
+                if (idx !== -1) { // löytyi kistalla
+                    vanhatIteemit[idx] = record;
+                } else { // ei ollut listalla
+                    vanhatIteemit.push(record);                   
+                }
+                taustaStore.set({tila: 'valmis', iteemit: vanhatIteemit});
+            } else if (action === 'poisto', record) {
+                const idx = vanhatIteemit.findIndex((x) => x.id === record.id);
+                if (idx !== -1) {
+                    // oli listalla
+                    vanhatIteemit = [
+                        ...vanhatIteemit.slice(0, idx),
+                        ...vanhatIteemit.slice(idx + 1),
+                    ];
+                    taustaStore.set({tila: 'valmis', iteemit: vanhatIteemit});
+                }
+            }
+        });        
     }
 
     lataaKauppalista();
