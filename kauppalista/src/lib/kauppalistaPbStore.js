@@ -46,7 +46,7 @@ export function kauppalistaPbStore(listaId) {
                 if (!vanhatIteemit.some((x) => x.id === record.id)) {
                     // Ei ollut sellaista iteemiä jonka id on record.id, joten record ei ollut vielä listassa.
                     vanhatIteemit.push(record);
-                    taustaStore.set({tila: 'valmis', iteemit: vanhatIteemit});
+                    taustaStore.set({tila: 'valmis', iteemit: structuredClone(vanhatIteemit)});
                 }
             } else if (action === 'update') {
                 const idx = vanhatIteemit.findIndex((x) => x.id === record.id);
@@ -55,7 +55,7 @@ export function kauppalistaPbStore(listaId) {
                 } else { // ei ollut listalla
                     vanhatIteemit.push(record);                   
                 }
-                taustaStore.set({tila: 'valmis', iteemit: vanhatIteemit});
+                taustaStore.set({tila: 'valmis', iteemit: structuredClone(vanhatIteemit)});
             } else if (action === 'poisto', record) {
                 const idx = vanhatIteemit.findIndex((x) => x.id === record.id);
                 if (idx !== -1) {
@@ -64,7 +64,7 @@ export function kauppalistaPbStore(listaId) {
                         ...vanhatIteemit.slice(0, idx),
                         ...vanhatIteemit.slice(idx + 1),
                     ];
-                    taustaStore.set({tila: 'valmis', iteemit: vanhatIteemit});
+                    taustaStore.set({tila: 'valmis', iteemit: structuredClone(vanhatIteemit)});
                 }
             }
         });        
@@ -84,7 +84,7 @@ export function kauppalistaPbStore(listaId) {
                 päivitä: api.päivitäKauppalistanAsia,
                 poista: api.poistaKauppalistanTuote,
             })
-            vanhatIteemit = arvo.iteemit;
+            vanhatIteemit = structuredClone(arvo.iteemit);
             
         }
     };
