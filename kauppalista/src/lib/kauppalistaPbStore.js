@@ -41,32 +41,30 @@ export function kauppalistaPbStore(listaId) {
             return;
            
         }
-        api.kuunteleMuutoksia(listaId, ({action, record}) => {
-            if (action === 'create') {
-                if (!vanhatIteemit.some((x) => x.id === record.id)) {
-                    // Ei ollut sellaista iteemiä jonka id on record.id, joten record ei ollut vielä listassa.
-                    vanhatIteemit.push(record);
-                    taustaStore.set({tila: 'valmis', iteemit: structuredClone(vanhatIteemit)});
-                }
-            } else if (action === 'update') {
-                const idx = vanhatIteemit.findIndex((x) => x.id === record.id);
-                if (idx !== -1) { // löytyi kistalla
-                    vanhatIteemit[idx] = record;
-                } else { // ei ollut listalla
-                    vanhatIteemit.push(record);                   
-                }
-                taustaStore.set({tila: 'valmis', iteemit: structuredClone(vanhatIteemit)});
-            } else if (action === 'poisto', record) {
-                const idx = vanhatIteemit.findIndex((x) => x.id === record.id);
-                if (idx !== -1) {
-                    // oli listalla
-                    vanhatIteemit = [
-                        ...vanhatIteemit.slice(0, idx),
-                        ...vanhatIteemit.slice(idx + 1),
-                    ];
-                    taustaStore.set({tila: 'valmis', iteemit: structuredClone(vanhatIteemit)});
-                }
+        await api.kuunteleMuutoksia(listaId, ({action, record}) => {
+            const idx = vanhatIteemit.findIndex((x) => x.id === record.id);
+            let muuttunut = false;
+            if (['create', 'update'].includes(action) && idx === -1) {
+                // Uusi tai päivitetty iteemi, jota ei ollut meidän listalla
+                vanhatIteemit.push(record);
+                muuttunut = true;       
+            } else if (['create', 'update'].includes(action) && idx !== -1) {
+                // Iteemi, joka oli meidän listalla
+                vanhatIteemit[idx] = record;
+                muuttunut = true;                 
+            } else if (action === 'delete' && idx !== -1) {  
+                // Iteemi poistunut, mutta löytyi vielä meidän listalta
+                vanhatIteemit = [
+                    ...vanhatIteemit.slice(0, idx),
+                    ...vanhatIteemit.slice(idx + 1),
+                ];
+                muuttunut = true;         
             }
+            if (muuttunut)
+                taustaStore.set({
+                    tila: 'valmis', 
+                    iteemit: structuredClone(vanhatIteemit),
+            });
         });        
     }
 
