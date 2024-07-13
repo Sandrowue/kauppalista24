@@ -23,24 +23,21 @@ Jos virhe:
 
 
 export function kauppalistaPbStore(listaId) {
-    const taustaStore = writable({tila: 'ladataan'});
-
     let vanhatIteemit = undefined;
     let peruKuuntelu = undefined;
-
-    async function lataaKauppalista() {
+    
+    async function lataaKauppalistaJaAloitaMuutostenKuuntelu(setter) {
         try {
             const kauppalistanAsiat = await api.lataaKauppalista(listaId);
             vanhatIteemit = kauppalistanAsiat;
-            taustaStore.set({tila: 'valmis', iteemit: kauppalistanAsiat});
+            setter({tila: 'valmis', iteemit: structuredClone(kauppalistanAsiat)});
         } catch(error) {
             console.error('Virhe:', error);
-            taustaStore.set({
+            setter({
                 tila: 'virhe',
-                virhe: 'Kauppalistaa ei saa ladattua'
+                virhe: 'Kauppalistaa ei saa ladattua',
             });
-            return;
-           
+            return;          
         }
         function käsitteleMuutos({action, record}) {
             const idx = vanhatIteemit.findIndex((x) => x.id === record.id);
@@ -62,7 +59,7 @@ export function kauppalistaPbStore(listaId) {
                 muuttunut = true;         
             }
             if (muuttunut)
-                taustaStore.set({
+                setter({
                     tila: 'valmis', 
                     iteemit: structuredClone(vanhatIteemit),
             });
@@ -71,15 +68,16 @@ export function kauppalistaPbStore(listaId) {
         peruKuuntelu = await api.kuunteleMuutoksia(listaId, käsitteleMuutos);
     }
 
-    lataaKauppalista();
+    
+    const taustaStore = writable({tila: 'ladataan'}, (setter) => {
+        lataaKauppalistaJaAloitaMuutostenKuuntelu(setter);
+        return () => peruKuuntelu?.();
+    });
 
     return {
         ...taustaStore,
         set(arvo) {
             taustaStore.set(arvo);
-            console.log('Asetetaan arvoa');
-            console.log('vanhat iteemit:', vanhatIteemit);
-            console.log('uudet iteemit:', arvo.iteemit);
             käsitteleMuutokset(vanhatIteemit, arvo.iteemit, {
                 luoUusi: (iteemi) => api.luoKauppalistanTuote(listaId, iteemi),
                 päivitä: api.päivitäKauppalistanAsia,
