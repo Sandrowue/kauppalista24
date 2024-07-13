@@ -26,6 +26,7 @@ export function kauppalistaPbStore(listaId) {
     const taustaStore = writable({tila: 'ladataan'});
 
     let vanhatIteemit = undefined;
+    let peruKuuntelu = undefined;
 
     async function lataaKauppalista() {
         try {
@@ -41,7 +42,7 @@ export function kauppalistaPbStore(listaId) {
             return;
            
         }
-        await api.kuunteleMuutoksia(listaId, ({action, record}) => {
+        function käsitteleMuutos({action, record}) {
             const idx = vanhatIteemit.findIndex((x) => x.id === record.id);
             let muuttunut = false;
             if (['create', 'update'].includes(action) && idx === -1) {
@@ -65,7 +66,9 @@ export function kauppalistaPbStore(listaId) {
                     tila: 'valmis', 
                     iteemit: structuredClone(vanhatIteemit),
             });
-        });        
+        };     
+        
+        peruKuuntelu = await api.kuunteleMuutoksia(listaId, käsitteleMuutos);
     }
 
     lataaKauppalista();
@@ -82,8 +85,8 @@ export function kauppalistaPbStore(listaId) {
                 päivitä: api.päivitäKauppalistanAsia,
                 poista: api.poistaKauppalistanTuote,
             })
-            vanhatIteemit = structuredClone(arvo.iteemit);
-            
-        }
+            vanhatIteemit = structuredClone(arvo.iteemit);           
+        },
+        
     };
 }

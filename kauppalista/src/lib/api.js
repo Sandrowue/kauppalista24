@@ -46,7 +46,7 @@ export async function haeKauppalistanTuetteet(pb, listaId, teksti) {
 export async function kuunteleMuutoksia(listaId, callback) {
     const pb = getPocketBase();
     const asiat = pb.collection('kauppalistan_tuotteet');
-    await asiat.subscribe('*', (data) => {
+    return await asiat.subscribe('*', (data) => {
         if (data.record.lista === listaId) {
             callback(data);          
         }
