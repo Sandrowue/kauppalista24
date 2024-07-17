@@ -15,7 +15,10 @@
             näkyvissä = false;
         } else {
             näkyvissä = true;
-            ajastimenKahva = setTimeout(() => (näkyvissä = false), viiveMs);
+            ajastimenKahva = setTimeout(() => {
+                näkyvissä = false;
+                $alert = "";}, 
+                viiveMs);
         }
     }
     $: viestinTaiViiveenMuuttuessa($alert, piilotusViiveMs);
