@@ -44,7 +44,7 @@
         cursor: pointer;
         margin-right: 1.5rem;
         margin-left: 1.5rem;
-        margin-top: 1rem;
+        margin-top: 2.8rem;
         right: 0;
         display: flex;
         align-items: center;
