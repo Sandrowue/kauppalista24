@@ -1,11 +1,10 @@
 <script>
+    import { page } from '$app/stores';
     import Alert from '$lib/components/Ilmoitus.svelte';
     import Kauppalista from '$lib/components/Kauppalista.svelte';
     import {kauppalistaPbStore} from '$lib/KauppalistaPbStore';
 
-    export let data;
-
-    export const kauppalista = kauppalistaPbStore(data.listaId);
+    export const kauppalista = kauppalistaPbStore($page.params.listaId);
 </script>
 
 <a href="/">Etusivu</a>
