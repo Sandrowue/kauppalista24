@@ -8,7 +8,7 @@
     export const kauppalista = kauppalistaPbStore(data.listaId);
 </script>
 
-<a href="/listat">Listojen hallinta</a>
+<a href="/">Etusivu</a>
 
 <Alert/>
 {#if $kauppalista.tila == 'valmis'}
