@@ -9,18 +9,20 @@
     let näkyvissä = false;
     let ajastimenKahva = undefined;
 
+    function poistaIlmoitus() {
+        $alert = '';
+        näkyvissä = false;
+    }
+
     function viestinTaiViiveenMuuttuessa(viesti, viiveMs) {
         clearTimeout(ajastimenKahva);
         if (!viesti) {
             näkyvissä = false;
         } else {
             näkyvissä = true;
-            ajastimenKahva = setTimeout(() => {
-                näkyvissä = false;
-                $alert = "";}, 
-                viiveMs);
+            ajastimenKahva = setTimeout(poistaIlmoitus, viiveMs)
         }
-    }
+    }    
     $: viestinTaiViiveenMuuttuessa($alert, piilotusViiveMs);
 
     onDestroy(() => clearTimeout(ajastimenKahva));
