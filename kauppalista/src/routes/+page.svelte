@@ -1,19 +1,3 @@
-<script>
-    import { haeKauppalistat } from "$lib/api";
+<h2>Etusivu</h2>
 
-    const listatPromise = haeKauppalistat();
-</script>
-
-<h1>Kauppalistat</h1>
-
-{#await listatPromise}
-    <div>Ladataan listoja...</div>
-{:then listat}
-<ul>
-    {#each listat as lista}
-        <li><a href="/listat/{lista.id}">{lista.nimi}</a></li>
-    {/each}
-</ul>
-{:catch}
-    <div>Virhe ladattaessa listoja</div>
-{/await}
+<a href="/listat">Listat</a>

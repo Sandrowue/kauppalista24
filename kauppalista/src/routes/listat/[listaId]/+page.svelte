@@ -8,6 +8,7 @@
 </script>
 
 <a href="/">Etusivu</a>
+<a href="/listat">Listat</a>
 
 <Alert/>
 {#if $kauppalista.tila == 'valmis'}
