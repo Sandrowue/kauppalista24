@@ -37,6 +37,23 @@
 <div class="kauppalista">
     <h1>Kauppalista</h1>
 
+    <form class="uusi" on:submit|preventDefault={lisääAsia}>
+        <!-- svelte-ignore a11y-no-redundant-roles -->
+        <fieldset role="group">
+            <!-- svelte-ignore a11y-autofocus -->
+            <input 
+                id="uusi-asia" 
+                name="asia" 
+                type="text" 
+                placeholder="Lisää uusi tuote"
+                bind:value={uusiAsiaTeksti}
+                required 
+                autofocus
+            />
+            <button>Lisää</button>
+        </fieldset>
+    </form>
+    
     <ul>
         {#each asiat as asia (asia.id)}
             <Asia 
@@ -47,21 +64,6 @@
         {/each}  
     </ul>
 
-    <form 
-        class="uusi" on:submit|preventDefault={lisääAsia}>
-
-        <label for="uusi-asia">Lisää uusi tuote:</label>
-        <!-- svelte-ignore a11y-autofocus -->
-        <input 
-            id="uusi-asia" 
-            name="asia" 
-            type="text" 
-            bind:value={uusiAsiaTeksti}
-            required 
-            autofocus
-        />
-        <button>Lisää</button>
-    </form>
 </div>
 
 
@@ -81,12 +83,11 @@
         background-color: orange;
         font-size: 150%;
     }
-    label {
-        display: block;
-    }
+   
     ul {
             color: greenyellow;
             font-size: 150%;
             background-color: orangered;
+            padding: 10px;
         }
 </style>
