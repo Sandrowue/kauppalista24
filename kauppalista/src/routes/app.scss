@@ -1,4 +1,16 @@
 @use "@picocss/pico/scss" with (
     $theme-color: "yellow",
-    $enable-classes: true
+    $enable-semantic-container: true,
+    $enable-classes: false
 );
+
+:root {
+    --pico-border-radius: 0.40rem;
+    --pico-form-element-spacing-vertical: 0.5rem;
+}
+
+[data-theme='light'],
+:root:not([data-them='dark']) {
+    --pico-primary-hover: color-mix(in srgb, red 70%, var(--pico-primary));
+}
+
