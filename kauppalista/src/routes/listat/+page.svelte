@@ -9,7 +9,7 @@
 <h1>Kauppalistat</h1>
 
 {#await listatPromise}
-    <div>Ladataan listoja...</div>
+    <div arial-busy="true">Ladataan listoja...</div>
 {:then listat}
 <ul>
     {#each listat as lista}
