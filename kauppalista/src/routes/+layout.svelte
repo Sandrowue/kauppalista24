@@ -1,13 +1,9 @@
-<svelte:head>
-    <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.fluid.classless.min.css"
-    />
-</svelte:head>
+<script>
+    import './app.scss'
+</script>
 
 <body>
-    
-    
+      
 <main style="border: 6px solid orangered">
 <h1>Kauppalista-appi</h1>
 

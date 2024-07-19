@@ -26,7 +26,6 @@
     li {
         list-style-type: none;  
         display: flex;
-        justify-content: space-between;
         align-items: center;     
     }
     .valmis {
