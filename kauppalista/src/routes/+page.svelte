@@ -1,12 +1,12 @@
 <script>
-    import tunnelmakuva from './tara-clark-IpbzCbvVA7Q-unsplash.jpg';
+    import tunnelmakuva from './tara-clark-IpbzCbvVA7Q-unsplash.jpg?enhanced&w=1920;1280;640';
 </script>
 
 <h2>Etusivu</h2>
 
 <figure>
     <a href="/listat">Listat
-        <img src={tunnelmakuva} alt="Ostoskori">
+        <enhanced:img src={tunnelmakuva} alt="Ostoskori">
     </a>
     <figcaption>
         Kuva:
