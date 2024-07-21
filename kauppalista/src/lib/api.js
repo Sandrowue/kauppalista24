@@ -7,8 +7,8 @@ export async function haeKauppalistat() {
 
 export async function lataaKauppalista(listaId) {
     const pb = getPocketBase();
-    const asiat = pb.collection('kauppalistat');
-    return await asiat.getOne(listaId);
+    const kauppalistat = pb.collection('kauppalistat');
+    return await kauppalistat.getOne(listaId);
 }
 
 export async function lataaKauppalistanAsiat(listaId) {
